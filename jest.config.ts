@@ -8,6 +8,10 @@ const createJestConfig = nextJest({
  
 // Add any custom config to be passed to Jest
 const config: Config = {
+  moduleNameMapper: {
+    "^@/components/(.*)$": "<rootDir>/components/$1",
+    "^@/lib/(.*)$": "<rootDir>/lib/$1"
+  },
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
