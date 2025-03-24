@@ -10,6 +10,11 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
+  "packageManager": "npm@10.9.2",
+  "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom"
+  },
   "dependencies": {
     "next": "15.2.3",
     "react": "^19.0.0",
