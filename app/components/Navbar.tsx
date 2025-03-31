@@ -7,28 +7,9 @@ import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
     const menuRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
-    var count = 0;
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const offset = window.scrollY;
-            if (offset > 50) {
-                setScrolled(true);
-                console.log('Scrolled down', count++);
-            } else {
-                setScrolled(false);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -63,11 +44,7 @@ export default function Navbar() {
     };
 
     return (
-        <nav className={`w-full py-6 px-12 transition-all duration-300 ${
-            scrolled 
-            ? 'bg-black/90 backdrop-blur-md' 
-            : 'bg-gradient-to-b from-black/80 to-transparent backdrop-blur-sm'
-        } flex justify-between items-center fixed top-0 left-0 z-50`}>
+        <nav className={`w-full py-6 px-12 transition-all duration-300 flex justify-between items-center fixed top-0 left-0 z-50`}>
             {/* Logo/Name */}
             <div>
                 <Link href="/" className="font-montserrat font-bold text-2xl text-white">
