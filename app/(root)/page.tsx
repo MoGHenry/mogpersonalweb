@@ -23,7 +23,7 @@ export default function HomePage() {
       <section className="w-full min-h-screen flex flex-col items-center justify-center">
         <h2 className="text-4xl font-montserrat font-bold mb-6">Section 2</h2>
         <p className="text-xl max-w-2xl text-center">
-          Another section to provide more content for scrolling. The navbar should now have a solid background as you've scrolled down the page.
+          Another section to provide more content for scrolling. The navbar should now have a solid background as you have scrolled down the page.
         </p>
       </section>
     </div>
