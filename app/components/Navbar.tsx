@@ -48,7 +48,7 @@ export default function Navbar() {
             {/* Logo/Name */}
             <div>
                 <Link href="/" className="font-montserrat font-bold text-2xl text-white">
-                    Yueheng Qiu
+                    Yueheng Qiu 
                 </Link>
             </div>
             
