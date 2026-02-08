@@ -65,20 +65,15 @@
     "remote": true,
   },
   "queues": {
-    "producers": [
-      {
-        "binding": "MY_QUEUE",
-        "queue": "email-queue"
-        }
-      ],
+    "producers": [{ "binding": "QUEUE", "queue": "abadf551b00141049a1fd6de4c76afc2"}],
     "consumers": [
       {
-        "queue": "email-queue",
+        "queue": "abadf551b00141049a1fd6de4c76afc2",
         "max_batch_size": 10,
         "max_batch_timeout": 5,
         "max_retries": 3,
-        "dead_letter_queue": "email-queue-dlq",
-      },
+        "dead_letter_queue": "my-queue-dlq",
+      }
     ],
   },
   "migrations": [
