@@ -65,14 +65,13 @@
     "remote": true,
   },
   "queues": {
-    "producers": [{ "binding": "QUEUE", "queue": "abadf551b00141049a1fd6de4c76afc2"}],
+    "producers": [{ "binding": "QUEUE", "queue": "site-prod-tasks" }],
     "consumers": [
       {
-        "queue": "abadf551b00141049a1fd6de4c76afc2",
+        "queue": "site-prod-tasks",
         "max_batch_size": 10,
         "max_batch_timeout": 5,
         "max_retries": 3,
-        "dead_letter_queue": "my-queue-dlq",
       }
     ],
   },
