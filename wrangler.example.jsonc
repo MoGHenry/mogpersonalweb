@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "MoGHenry-blog",
+  "name": "my-blog",
   "compatibility_date": "2025-10-11",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
@@ -9,21 +9,21 @@
   },
   "routes": [
     {
-      "pattern": "moghenry.com/*",
+      "pattern": "DOMAIN_PLACEHOLDER",
       "custom_domain": true,
     },
   ],
   "d1_databases": [
     {
       "binding": "DB",
-      "database_id": "bc3baf4e-5815-48eb-8229-376dd729dba9",
+      "database_id": "D1_DATABASE_ID",
       "migrations_dir": "migrations",
       "remote": true,
     },
   ],
   "r2_buckets": [
     {
-      "bucket_name": "site-prod-assets",
+      "bucket_name": "bucket-name-placeholder",
       "binding": "R2",
       "remote": true,
     },
@@ -31,7 +31,7 @@
   "kv_namespaces": [
     {
       "binding": "KV",
-      "id": "5c4fae69a46041738f4eeadfeda1ffcd",
+      "id": "KV_NAMESPACE_ID",
       "remote": true,
     },
   ],
