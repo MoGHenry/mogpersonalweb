@@ -1,4 +1,4 @@
-# Flare Stack Blog V2.2
+# Flare Stack Blog V2.3
 
 > 更新后部署失败？请查看 [CHANGELOG](./CHANGELOG.md) 了解 Breaking Changes。
 
