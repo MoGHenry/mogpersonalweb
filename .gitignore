@@ -16,7 +16,10 @@ drizzle
 test.http
 .secrets
 /flare-stack-blog-main
+<<<<<<< HEAD
 /.claude
 /.claude
 /.claude/evaluating-candidates
 /.playwright-mcp
+=======
+>>>>>>> parent of aaa7610 (refresh)
