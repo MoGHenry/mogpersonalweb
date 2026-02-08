@@ -11,7 +11,9 @@ on:
     paths-ignore:
       - "**.md"
       - ".agent/**"
+      - ".claude/**"
       - ".vscode/**"
+      - ".playwright-mcp/**"
       - ".gitignore"
   workflow_dispatch:
 

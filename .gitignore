@@ -15,11 +15,6 @@ todos.json
 drizzle
 test.http
 .secrets
-/flare-stack-blog-main
-<<<<<<< HEAD
+wrangler.jsonc
 /.claude
-/.claude
-/.claude/evaluating-candidates
 /.playwright-mcp
-=======
->>>>>>> parent of aaa7610 (refresh)
