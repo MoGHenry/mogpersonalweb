@@ -21,8 +21,10 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
-  ssr: {
-    external: ["cloudflare:workers"],
+  build: {
+    rollupOptions: {
+      external: ["cloudflare:workers"],
+    },
   },
 });
 
