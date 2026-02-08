@@ -51,6 +51,7 @@ jobs:
     name: Deploy
     needs: test
     runs-on: ubuntu-latest
+    environment: cloudfare
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
