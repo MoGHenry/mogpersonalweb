@@ -16,3 +16,6 @@ drizzle
 test.http
 .secrets
 /flare-stack-blog-main
+/.claude
+/.claude
+/.claude/evaluating-candidates
