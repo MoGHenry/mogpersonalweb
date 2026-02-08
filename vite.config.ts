@@ -21,6 +21,9 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  ssr: {
+    external: ["cloudflare:workers"],
+  },
 });
 
 export default config;
