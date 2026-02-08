@@ -1,0 +1,105 @@
+import { EditorContent, useEditor } from "@tiptap/react";
+import { memo, useCallback, useState } from "react";
+import InsertModal from "./ui/insert-modal";
+import EditorToolbar from "./ui/editor-toolbar";
+import { TableBubbleMenu } from "./ui/table-bubble-menu";
+import type {
+  Extensions,
+  JSONContent,
+  Editor as TiptapEditor,
+} from "@tiptap/react";
+import type { ModalType } from "./ui/insert-modal";
+import { normalizeLinkHref } from "@/lib/links/normalize-link-href";
+
+interface EditorProps {
+  content?: JSONContent | string;
+  onChange?: (json: JSONContent) => void;
+  onCreated?: (editor: TiptapEditor) => void;
+  extensions: Extensions;
+}
+
+export const Editor = memo(function Editor({
+  content,
+  onChange,
+  onCreated,
+  extensions,
+}: EditorProps) {
+  const [modalOpen, setModalOpen] = useState<ModalType>(null);
+  const [modalInitialUrl, setModalInitialUrl] = useState("");
+
+  const editor = useEditor({
+    extensions,
+    content,
+    onCreate: ({ editor: currentEditor }) => {
+      onCreated?.(currentEditor);
+    },
+    onUpdate: ({ editor: currentEditor }) => {
+      onChange?.(currentEditor.getJSON());
+    },
+    editorProps: {
+      attributes: {
+        class:
+          "max-w-none focus:outline-none text-lg leading-relaxed min-h-[500px]",
+      },
+    },
+    immediatelyRender: false,
+  });
+
+  const openLinkModal = useCallback(() => {
+    const previousUrl = editor?.getAttributes("link").href;
+    setModalInitialUrl(previousUrl || "");
+    setModalOpen("LINK");
+  }, [editor]);
+
+  const openImageModal = useCallback(() => {
+    setModalInitialUrl("");
+    setModalOpen("IMAGE");
+  }, []);
+
+  const handleModalSubmit = (
+    url: string,
+    attrs?: { width?: number; height?: number },
+  ) => {
+    if (modalOpen === "LINK") {
+      if (url === "") {
+        editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+      } else {
+        const href = normalizeLinkHref(url);
+        editor?.chain().focus().extendMarkRange("link").setLink({ href }).run();
+      }
+    } else if (modalOpen === "IMAGE") {
+      if (url) {
+        editor
+          ?.chain()
+          .focus()
+          .setImage({ src: url, ...attrs })
+          .run();
+      }
+    }
+
+    setModalOpen(null);
+  };
+
+  return (
+    <div className="flex flex-col relative group">
+      <EditorToolbar
+        editor={editor}
+        onLinkClick={openLinkModal}
+        onImageClick={openImageModal}
+      />
+
+      <TableBubbleMenu editor={editor} />
+
+      <div className="relative min-h-125">
+        <EditorContent editor={editor} />
+      </div>
+
+      <InsertModal
+        type={modalOpen}
+        initialUrl={modalInitialUrl}
+        onClose={() => setModalOpen(null)}
+        onSubmit={handleModalSubmit}
+      />
+    </div>
+  );
+});
