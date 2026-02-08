@@ -60,6 +60,11 @@
       },
     ],
   },
+  "vars": {
+    "ADMIN_EMAIL": "moghenry0@gmail.com",
+    "BETTER_AUTH_URL": "https://moghenry.com",
+    "DOMAIN": "moghenry.com",
+  },
   "ai": {
     "binding": "AI",
     "remote": true,
