@@ -19,3 +19,4 @@ test.http
 /.claude
 /.claude
 /.claude/evaluating-candidates
+/.playwright-mcp
