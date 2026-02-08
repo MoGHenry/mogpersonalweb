@@ -25,6 +25,7 @@ const config = defineConfig({
     rollupOptions: {
       external: ["cloudflare:workers"],
     },
+  },
 });
 
 export default config;
