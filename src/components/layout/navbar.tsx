@@ -60,7 +60,8 @@ export function Navbar({
               <Link
                 key={option.id}
                 to={option.to}
-                className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground/60 hover:text-foreground transition-colors"
+                
+                className="text-base font-medium uppercase tracking-widest text-muted-foreground/60 hover:text-foreground transition-colors"
                 activeProps={{
                   className: "!text-foreground",
                 }}
@@ -79,7 +80,7 @@ export function Navbar({
                 className="text-muted-foreground hover:text-foreground h-8 w-8 flex items-center justify-center transition-colors"
               >
                 <Search
-                  size={16}
+                  size={30}
                   strokeWidth={1.5}
                   style={{ viewTransitionName: "search-input" }}
                 />
