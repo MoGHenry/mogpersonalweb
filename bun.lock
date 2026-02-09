@@ -4,6 +4,7 @@
     "": {
       "name": ".",
       "dependencies": {
+        "@fontsource-variable/manrope": "^5.2.8",
         "@hono/zod-validator": "^0.7.6",
         "@hookform/resolvers": "^5.2.2",
         "@noble/hashes": "^2.0.1",
@@ -61,8 +62,6 @@
         "@cloudflare/vite-plugin": "^1.13.15",
         "@cloudflare/vitest-pool-workers": "^0.11.1",
         "@fontsource-variable/jetbrains-mono": "^5.2.8",
-        "@fontsource-variable/noto-sans-sc": "^5.2.9",
-        "@fontsource-variable/noto-serif-sc": "^5.2.10",
         "@tanstack/devtools-vite": "^0.3.9",
         "@tanstack/eslint-config": "^0.3.4",
         "@testing-library/dom": "^10.4.0",
@@ -276,9 +275,7 @@
 
     "@fontsource-variable/jetbrains-mono": ["@fontsource-variable/jetbrains-mono@5.2.8", "", {}, "sha512-WBA9elru6Jdp5df2mES55wuOO0WIrn3kpXnI4+W2ek5u3ZgLS9XS4gmIlcQhiZOWEKl95meYdvK7xI+ETLCq/Q=="],
 
-    "@fontsource-variable/noto-sans-sc": ["@fontsource-variable/noto-sans-sc@5.2.10", "", {}, "sha512-zdk10i5HrDQTXI7ldD61zToX1fsgig8vDTsu7zB48SXOitWfuX0e5viZAwnkHuhwh096PU6X6i1AyAsbBCISpA=="],
-
-    "@fontsource-variable/noto-serif-sc": ["@fontsource-variable/noto-serif-sc@5.2.10", "", {}, "sha512-TRhuDxWAnqUUtRZFCy8aoJB3/7HsuCaW/4B3wBTE0hzE8QVapklTjE2aY7s/wXWFXHLdflYNroloZoXekoKClw=="],
+    "@fontsource-variable/manrope": ["@fontsource-variable/manrope@5.2.8", "", {}, "sha512-nc9lOuCRz73UHnovDE2bwXUdghE2SEOc7Aii0qGe3CLyE03W1a7VnY5Z6euRiapiKbCkGS+eXbY3s/kvWeGeSw=="],
 
     "@hono/zod-validator": ["@hono/zod-validator@0.7.6", "", { "peerDependencies": { "hono": ">=3.9.0", "zod": "^3.25.0 || ^4.0.0" } }, "sha512-Io1B6d011Gj1KknV4rXYz4le5+5EubcWEU/speUjuw9XMMIaP3n78yXLhjd2A3PXaXaUwEAluOiAyLqhBEJgsw=="],
 
