@@ -18,3 +18,5 @@ test.http
 wrangler.jsonc
 /.claude
 /.playwright-mcp
+/docs/drafts
+/docs/plans
