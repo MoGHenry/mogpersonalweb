@@ -20,3 +20,6 @@ wrangler.jsonc
 /.playwright-mcp
 /docs/drafts
 /docs/plans
+/.agent
+/.claude
+/docs/polished
