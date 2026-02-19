@@ -29,7 +29,7 @@ export const Route = createFileRoute("/_public/posts")({
     ]);
 
     return {
-      title: "全部文章",
+      title: "All Posts",
     };
   },
   head: ({ loaderData }) => ({
@@ -96,7 +96,7 @@ function RouteComponent() {
       {/* Header Section */}
       <header className="py-12 md:py-20 space-y-6">
         <h1 className="text-4xl md:text-5xl font-serif font-medium tracking-tight text-foreground">
-          文章
+          Posts
         </h1>
         <p className="max-w-xl text-base md:text-lg font-light text-muted-foreground leading-relaxed">
           {blogConfig.description}
