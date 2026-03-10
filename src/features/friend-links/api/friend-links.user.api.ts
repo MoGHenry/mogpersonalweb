@@ -5,6 +5,7 @@ import {
   authMiddleware,
   createRateLimitMiddleware,
   dbMiddleware,
+  turnstileMiddleware,
 } from "@/lib/middlewares";
 
 export const submitFriendLinkFn = createServerFn({
@@ -16,12 +17,14 @@ export const submitFriendLinkFn = createServerFn({
       interval: "1h",
       key: "friend-links:submit",
     }),
+    turnstileMiddleware,
     authMiddleware,
   ])
   .inputValidator(SubmitFriendLinkInputSchema)
-  .handler(async ({ data, context }) => {
-    return await FriendLinkService.submitFriendLink(context, data);
-  });
+  .handler(
+    async ({ data, context }) =>
+      await FriendLinkService.submitFriendLink(context, data),
+  );
 
 export const getApprovedFriendLinksFn = createServerFn()
   .middleware([dbMiddleware])
@@ -30,14 +33,7 @@ export const getApprovedFriendLinksFn = createServerFn()
   });
 
 export const getMyFriendLinksFn = createServerFn()
-  .middleware([
-    createRateLimitMiddleware({
-      capacity: 30,
-      interval: "1m",
-      key: "friend-links:getMine",
-    }),
-    authMiddleware,
-  ])
-  .handler(async ({ context }) => {
-    return await FriendLinkService.getMyFriendLinks(context);
-  });
+  .middleware([authMiddleware])
+  .handler(
+    async ({ context }) => await FriendLinkService.getMyFriendLinks(context),
+  );
