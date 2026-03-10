@@ -3,6 +3,7 @@
 
 // Pre-compiled Regexes for maximum performance on Cloudflare Workers
 export const ROUTE_REGEXPS: Array<RegExp> = [
+  new RegExp("^/$"),
   new RegExp("^/admin/?$"),
   new RegExp("^/robots\\.txt/?$"),
   new RegExp("^/rss\\.xml/?$"),
@@ -19,7 +20,6 @@ export const ROUTE_REGEXPS: Array<RegExp> = [
   new RegExp("^/unsubscribe/?$"),
   new RegExp("^/profile/?$"),
   new RegExp("^/submit-friend-link/?$"),
-  new RegExp("^/$"),
   new RegExp("^/post/[^/]+/?$"),
   new RegExp("^/admin/comments/?$"),
   new RegExp("^/admin/friend-links/?$"),
