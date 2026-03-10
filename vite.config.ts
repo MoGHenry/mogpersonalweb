@@ -43,7 +43,15 @@ const config = defineConfig(({ mode }) => {
       }),
       tailwindcss(),
       devtools(),
-      tanstackStart(),
+      tanstackStart({
+        importProtection: {
+          server: {
+            // auth.client.ts is Better Auth's isomorphic React client (supports SSR).
+            // The .client. naming follows Better Auth SDK convention, not browser-only semantics.
+            excludeFiles: ["**/auth/auth.client.ts"],
+          },
+        },
+      }),
       viteReact(),
     ],
   };

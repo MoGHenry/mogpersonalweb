@@ -3,7 +3,7 @@ import type {
   DashboardRange,
   DashboardResponse,
 } from "@/features/dashboard/dashboard.schema";
-import { UmamiClient } from "@/features/dashboard/data/umami.client";
+import { UmamiClient } from "@/features/dashboard/data/umami";
 import {
   ALL_RANGES,
   DASHBOARD_CACHE_KEYS,
