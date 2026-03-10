@@ -79,7 +79,6 @@ function RouteComponent() {
   };
 
   return (
-          Posts
     <theme.PostsPage
       posts={posts}
       tags={tags}
