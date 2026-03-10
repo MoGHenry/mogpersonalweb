@@ -1,4 +1,5 @@
 import { RouteApi } from "@tanstack/react-router";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Check,
@@ -10,9 +11,12 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { FRIEND_LINKS_KEYS, allFriendLinksQuery } from "../../queries";
 import { useAdminFriendLinks } from "../../hooks/use-friend-links";
+import { CreateFriendLinkInputSchema } from "../../friend-links.schema";
+import type { CreateFriendLinkInput } from "../../friend-links.schema";
 
 import type { FriendLinkStatus } from "@/lib/db/schema";
 import { Button } from "@/components/ui/button";
@@ -35,7 +39,12 @@ export const FriendLinkModerationTable = ({
   page = 1,
 }: FriendLinkModerationTableProps) => {
   const navigate = routeApi.useNavigate();
-  const { data: response, isLoading } = useQuery(
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
     allFriendLinksQuery({
       status,
       limit: PAGE_SIZE,
@@ -44,7 +53,7 @@ export const FriendLinkModerationTable = ({
   );
 
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const { approve, reject } = useAdminFriendLinks();
+  const { approveAsync, rejectAsync } = useAdminFriendLinks();
   const queryClient = useQueryClient();
 
   const handleSelectAll = () => {
@@ -71,13 +80,15 @@ export const FriendLinkModerationTable = ({
     const toastId = toast.loading(`正在批准 ${selectedIds.size} 条友链...`);
     try {
       await Promise.all(
-        Array.from(selectedIds).map((id) => approve({ data: { id } })),
+        Array.from(selectedIds).map((id) => approveAsync({ data: { id } })),
       );
       toast.success("批量批准完成", { id: toastId });
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: FRIEND_LINKS_KEYS.all });
-    } catch {
-      toast.error("部分操作失败", { id: toastId });
+    } catch (caughtError) {
+      toast.error("部分操作失败", {
+        id: toastId,
+      });
     }
   };
 
@@ -86,13 +97,15 @@ export const FriendLinkModerationTable = ({
     const toastId = toast.loading(`正在拒绝 ${selectedIds.size} 条友链...`);
     try {
       await Promise.all(
-        Array.from(selectedIds).map((id) => reject({ data: { id } })),
+        Array.from(selectedIds).map((id) => rejectAsync({ data: { id } })),
       );
       toast.success("批量拒绝完成", { id: toastId });
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: FRIEND_LINKS_KEYS.all });
-    } catch {
-      toast.error("部分操作失败", { id: toastId });
+    } catch (caughtError) {
+      toast.error("部分操作失败", {
+        id: toastId,
+      });
     }
   };
 
@@ -100,6 +113,15 @@ export const FriendLinkModerationTable = ({
     return (
       <div className="py-24 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="py-24 flex flex-col items-center justify-center text-muted-foreground font-serif italic gap-4 border-t border-border">
+        <ShieldAlert size={40} strokeWidth={1} className="opacity-30" />
+        <p>{error.message}</p>
       </div>
     );
   }
@@ -456,14 +478,16 @@ const FriendLinkActions = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleApprove = async () => {
+  const handleApprove = () => {
     setIsOpen(false);
-    await approve({ data: { id: friendLinkId } });
+    approve({ data: { id: friendLinkId } });
   };
 
-  const confirmDelete = async () => {
-    await adminDelete({ data: { id: friendLinkId } });
-    setShowDeleteConfirm(false);
+  const confirmDelete = () => {
+    adminDelete(
+      { data: { id: friendLinkId } },
+      { onSuccess: () => setShowDeleteConfirm(false) },
+    );
   };
 
   const isLoading = isApproving || isRejecting || isUpdating || isAdminDeleting;
@@ -552,9 +576,11 @@ const FriendLinkActions = ({
       <RejectModal
         isOpen={showRejectModal}
         onClose={() => setShowRejectModal(false)}
-        onConfirm={async (reason) => {
-          await reject({ data: { id: friendLinkId, rejectionReason: reason } });
-          setShowRejectModal(false);
+        onConfirm={(reason) => {
+          reject(
+            { data: { id: friendLinkId, rejectionReason: reason } },
+            { onSuccess: () => setShowRejectModal(false) },
+          );
         }}
         isLoading={isRejecting}
       />
@@ -563,9 +589,11 @@ const FriendLinkActions = ({
         key={friendLinkId}
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
-        onConfirm={async (data) => {
-          await update({ data: { id: friendLinkId, ...data } });
-          setShowEditModal(false);
+        onConfirm={(data) => {
+          update(
+            { data: { id: friendLinkId, ...data } },
+            { onSuccess: () => setShowEditModal(false) },
+          );
         }}
         isLoading={isUpdating}
         initialData={friendLink}
@@ -584,7 +612,7 @@ const RejectModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (reason?: string) => Promise<void>;
+  onConfirm: (reason?: string) => void;
   isLoading: boolean;
 }) => {
   const [reason, setReason] = useState("");
@@ -656,7 +684,7 @@ const EditModal = ({
     description?: string;
     logoUrl?: string;
     contactEmail?: string;
-  }) => Promise<void>;
+  }) => void;
   isLoading: boolean;
   initialData: {
     siteName: string;
@@ -666,13 +694,40 @@ const EditModal = ({
     contactEmail: string | null;
   };
 }) => {
-  const [formData, setFormData] = useState({
-    siteName: initialData.siteName,
-    siteUrl: initialData.siteUrl,
-    description: initialData.description || "",
-    logoUrl: initialData.logoUrl || "",
-    contactEmail: initialData.contactEmail || "",
+  const form = useForm<CreateFriendLinkInput>({
+    resolver: standardSchemaResolver(CreateFriendLinkInputSchema),
+    defaultValues: {
+      siteName: initialData.siteName,
+      siteUrl: initialData.siteUrl,
+      description: initialData.description || "",
+      logoUrl: initialData.logoUrl || "",
+      contactEmail: initialData.contactEmail || "",
+    },
   });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = form;
+
+  const [siteName, siteUrl] = watch(["siteName", "siteUrl"]);
+
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
+  const handleConfirm = (data: CreateFriendLinkInput) => {
+    onConfirm({
+      siteName: data.siteName,
+      siteUrl: data.siteUrl,
+      description: data.description || undefined,
+      logoUrl: data.logoUrl || undefined,
+      contactEmail: data.contactEmail || undefined,
+    });
+  };
 
   if (!isOpen) return null;
 
@@ -680,47 +735,48 @@ const EditModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
         className="fixed inset-0 bg-background/80 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
       />
       <div className="relative bg-background border border-border/30 p-8 max-w-md w-full mx-4 animate-in fade-in zoom-in-95 duration-200">
         <h3 className="text-lg font-serif font-medium mb-6">编辑友链</h3>
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit(handleConfirm)} className="space-y-4">
           <FormField
             label="站点名称"
-            value={formData.siteName}
-            onChange={(v) => setFormData((p) => ({ ...p, siteName: v }))}
+            error={errors.siteName?.message}
+            inputProps={register("siteName")}
           />
           <FormField
             label="站点地址"
-            value={formData.siteUrl}
-            onChange={(v) => setFormData((p) => ({ ...p, siteUrl: v }))}
+            error={errors.siteUrl?.message}
+            inputProps={register("siteUrl")}
           />
           <FormField
             label="站点简介"
-            value={formData.description}
-            onChange={(v) => setFormData((p) => ({ ...p, description: v }))}
+            error={errors.description?.message}
+            inputProps={register("description")}
           />
           <FormField
             label="Logo 地址"
-            value={formData.logoUrl}
-            onChange={(v) => setFormData((p) => ({ ...p, logoUrl: v }))}
+            error={errors.logoUrl?.message}
+            inputProps={register("logoUrl")}
           />
           <FormField
             label="联系邮箱"
-            value={formData.contactEmail}
-            onChange={(v) => setFormData((p) => ({ ...p, contactEmail: v }))}
+            error={errors.contactEmail?.message}
+            inputProps={register("contactEmail")}
           />
           <div className="flex justify-end gap-3 pt-4">
             <Button
+              type="button"
               variant="ghost"
-              onClick={onClose}
+              onClick={handleClose}
               className="font-mono text-[10px] uppercase tracking-widest rounded-none"
             >
               取消
             </Button>
             <Button
-              onClick={() => onConfirm(formData)}
-              disabled={isLoading}
+              type="submit"
+              disabled={isLoading || !siteName.trim() || !siteUrl.trim()}
               className="rounded-none bg-foreground text-background hover:bg-foreground/90 font-mono text-[10px] uppercase tracking-widest"
             >
               {isLoading ? (
@@ -730,7 +786,7 @@ const EditModal = ({
               )}
             </Button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
@@ -738,21 +794,21 @@ const EditModal = ({
 
 const FormField = ({
   label,
-  value,
-  onChange,
+  error,
+  inputProps,
 }: {
   label: string;
-  value: string;
-  onChange: (value: string) => void;
+  error?: string;
+  inputProps: React.ComponentProps<typeof Input>;
 }) => (
   <div className="space-y-1.5">
     <label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
       {label}
     </label>
     <Input
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
+      {...inputProps}
       className="bg-transparent border-0 border-b border-border/50 text-sm px-0 rounded-none focus-visible:ring-0 focus-visible:border-foreground transition-all shadow-none h-auto py-1.5"
     />
+    {error && <p className="text-xs text-red-500">! {error}</p>}
   </div>
 );
