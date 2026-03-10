@@ -5,7 +5,6 @@
     "": {
       "name": ".",
       "dependencies": {
-        "@fontsource-variable/manrope": "^5.2.8",
         "@hono/zod-validator": "^0.7.6",
         "@hookform/resolvers": "^5.2.2",
         "@noble/hashes": "^2.0.1",
@@ -81,7 +80,6 @@
         "@types/react": "^19.2.0",
         "@types/react-dom": "^19.2.0",
         "@vitejs/plugin-react": "^5.0.4",
-        "baseline-browser-mapping": "^2.9.19",
         "drizzle-kit": "^0.31.5",
         "eslint": "9.39.2",
         "jsdom": "^27.0.0",
